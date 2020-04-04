@@ -1,0 +1,4 @@
+
+# 全体
+*.DS_Store
+/node_modules

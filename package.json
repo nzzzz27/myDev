@@ -1,0 +1,48 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "my portfolio",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^9.7.5",
+    "browser-sync": "^2.26.7",
+    "del": "^5.1.0",
+    "eslint": "^6.8.0",
+    "gulp": "^4.0.2",
+    "gulp-plumber": "^1.2.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-ejs": "^5.0.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-pngquant": "^8.0.0",
+    "imagemin-svgo": "^7.1.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "ie >= 11",
+    "Android >= 4",
+    "ios_saf >= 8"
+  ],
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nzzzz27/myDev.git"
+  },
+  "keywords": [],
+  "author": "Nozomi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nzzzz27/myDev/issues"
+  },
+  "homepage": "https://github.com/nzzzz27/myDev#readme"
+}
