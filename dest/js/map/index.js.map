@@ -1,1 +1,1 @@
-{"version":3,"names":[],"mappings":"","sources":["index.js"],"sourcesContent":[""],"file":"index.js"}
+{"version":3,"sources":["index.js"],"names":["document","addEventListener"],"mappings":"aACAA,SAASC,iBAAiB,mBAAoB,WAA9CD,QAASC,IAAAA","file":"index.js","sourcesContent":["\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('loaded');\n});\n"]}

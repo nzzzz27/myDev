@@ -2,12 +2,14 @@
 const gulp = require('gulp'); //gulp
 const rename = require('gulp-rename'); //名前変更
 const sass = require('gulp-sass'); //sassコンパイル
+const packageImporter = require('node-sass-package-importer'); //cssパッケージのimport用
 const postcss = require('gulp-postcss'); //autoprefixerを使うのに必要
 const autoprefixer = require('autoprefixer'); //prefixをつける
 const cleanCss = require('gulp-clean-css'); //css圧縮
 const ejs = require('gulp-ejs'); //ejsコンパイル
 const htmlmin = require('gulp-htmlmin'); //html圧縮と整理
-// const uglify = require('gulp-uglify'); //js圧縮
+const babel = require('gulp-babel'); //jsトランスパイル
+const uglify = require('gulp-uglify'); //js圧縮
 const eslint = require('eslint'); //js linter
 const del = require('del'); //フォルダやファイルを削除
 const imagemin = require('gulp-imagemin'); //画像圧縮
@@ -34,6 +36,7 @@ const paths = {
   },
   styles: {
     src: pathOrigin.dev + '/scss/*.scss',
+    tempSrc: pathOrigin.dev + '/scss/**/_*.scss',
     dest: pathOrigin.dest + '/css',
     map: '/map',
     clearmap: pathOrigin.dest + '/css/map',
@@ -49,7 +52,7 @@ const paths = {
     dest: pathOrigin.dest + '/assets',
   }
 }
-const srcpathAll = [paths.html.src, paths.html.tempSrc, paths.styles.src, paths.scripts.src, paths.images.src];
+const srcpathAll = [paths.html.src, paths.html.tempSrc, paths.styles.src, paths.styles.tempSrc, paths.scripts.src, paths.images.src];
 
 
 //画質コントロール
@@ -63,7 +66,7 @@ const imageQuality = {
 // sass
 function stylesFunc() {
   return gulp
-    .src(paths.styles.src, {sourcemaps: true, since: gulp.lastRun(stylesFunc)})
+    .src([paths.styles.src, paths.styles.tempSrc], {sourcemaps: true, since: gulp.lastRun(stylesFunc)})
     .pipe(plumber({
       errorHandler: notify.onError('Error: <%= error.message %>')
     }))
@@ -78,7 +81,7 @@ function stylesFunc() {
 // EJS
 function htmlFunc() {
   return gulp
-    .src([paths.html.src, '!' + paths.html.tempSrc], {since: gulp.lastRun(htmlFunc) })
+    .src([paths.html.src, '!' + paths.html.tempSrc], {since: gulp.lastRun(htmlFunc)})
     .pipe(plumber({
       errorHandler: notify.onError('Error: <%= error.message %>')
     }))
@@ -95,11 +98,14 @@ function htmlFunc() {
 // JS
 function scriptFunc() {
   return gulp
-    .src(paths.scripts.src, { sourcemaps: true })
+    .src(paths.scripts.src, { sourcemaps: true, since: gulp.lastRun(scriptFunc)})
     .pipe(plumber({
       errorHandler: notify.onError('Error: <%= error.message %>')
     }))
-    // .pipe(uglify())
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(uglify())
     .pipe (gulp.dest(paths.scripts.dest, { sourcemaps: paths.styles.map, since: gulp.lastRun(scriptFunc)}));
 }
 
@@ -120,7 +126,7 @@ function imageFunc() {
 function destServer(done) {
   browserSync.init({
       server: {
-          baseDir: './dest',
+          baseDir: pathOrigin.dest,
           index  : "index.html"
       },
       reloadOnRestart: true,
@@ -153,7 +159,6 @@ function watchFiles() {
   gulp.watch(paths.html.src)
     .on('all', (event, path) => {
       if (event === 'unlink' || event === 'unlinkDir') {
-        console.log(path);
         return del(path.replace(/src\/views/, paths.html.dest).replace('ejs', 'html'));
       }
       return htmlFunc();
@@ -167,6 +172,7 @@ function watchFiles() {
       }
       return scriptFunc();
   });
+  gulp.watch(paths.styles.tempSrc, gulp.series(stylesFunc));
 
   gulp.watch(paths.images.src)
     .on('all', (event, path) => {

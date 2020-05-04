@@ -1,1 +1,1 @@
-{"version":3,"sources":[],"names":[],"mappings":"","file":"index.css"}
+{"version":3,"sources":["index.scss"],"names":[],"mappings":"AACA,GACE,MAAA","file":"index.css","sourcesContent":["\nh1 {\n  color: pink;\n}\n"]}
